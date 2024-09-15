@@ -10,7 +10,7 @@ class FakerDataFrame:
     def __init__(self, master):
         self.master = master
         self.master.title("Faker Dataframe Generator")
-        self.master.geometry("1000x800")
+        self.master.geometry("1500x1000")
 
         #Initialize Faker as fake
         self.fake = Faker()
@@ -42,7 +42,7 @@ class FakerDataFrame:
         table_field = {
             'Name': [self.fake.name() for _ in range(size)],
             'Email': [self.fake.email() for _ in range(size)],
-            'Address': [self.fake.address() for _ in range(size)],
+            'Address': [self.fake.address().replace('\n', ', ') for _ in range(size)], #Show address on singleline
             'Phone': [self.fake.phone_number() for _ in range(size)],
             'Job': [self.fake.job() for _ in range(size)]
         }
@@ -56,8 +56,9 @@ class FakerDataFrame:
         #Setup columns for Treeview
         self.tree["column"] = list(df.columns)
         self.tree["show"] = "headings"
-        for col in self.tree["columns"]:
-            self.tree.heading(col, text=col)
+        
+        #Add adjust_width_columns to dynamically adjust column width to data
+        self.adjust_width_columns(df)
 
         #Add to Treeview
         for _, row in df.iterrows():
@@ -67,6 +68,12 @@ class FakerDataFrame:
     def clear_tree(self):
         self.tree.delete(*self.tree.get_children())
 
+    #Allow column width adjustment for data length
+    def adjust_width_columns(self, df):
+        for length in df.columns:
+            max_length = max([len(str(value)) for value in df[length]] + [len(length)])
+            self.tree.column(length, width=max_length*10) #scale width by 10 factor
+            self.tree.heading(length, text=length)
 
 if __name__ == "__main__":
     #Run loop for GUI to get input and create dataframe
