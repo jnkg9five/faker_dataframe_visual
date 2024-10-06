@@ -14,7 +14,7 @@ class FakerDataFrame:
 
         #Initialize Faker as fake
         self.fake = Faker()
-
+ 
         #GUI components
         self.make_widgets()
 
@@ -31,6 +31,10 @@ class FakerDataFrame:
         self.make_button = tk.Button(self.master, text="Generate Faker Data", command=self.faker_gen_data)
         self.make_button.pack(pady=10)
 
+        #Sort Button
+        self.sorting_button = tk.Button(self.master, text="Sort Name", command=self.name_sort)
+        self.sorting_button.pack(pady=10)
+
         #Insert data into the Treeview
         self.tree = ttk.Treeview(self.master)
         self.tree.pack(expand=True, fill='both', padx=10, pady=10)
@@ -40,7 +44,7 @@ class FakerDataFrame:
         size = int(self.table_entry.get())
 
         table_field = {
-            'Name': [self.fake.name() for _ in range(size)],
+            'Name': [self.fake.first_name()+" "+self.fake.last_name() for _ in range(size)],
             'Email': [self.fake.email() for _ in range(size)],
             'Address': [self.fake.address().replace('\n', ', ') for _ in range(size)], #Show address on singleline
             'Phone': [self.fake.phone_number() for _ in range(size)],
@@ -48,20 +52,24 @@ class FakerDataFrame:
         }
  
         #Make DataFrame
-        df = pd.DataFrame(table_field)
+        self.df = pd.DataFrame(table_field)
 
+        #Display data method to get functionality
+        self.display_data(self.df)
+
+    def display_data(self, df):
         #Clear data
         self.clear_tree()
 
         #Setup columns for Treeview
         self.tree["column"] = list(df.columns)
         self.tree["show"] = "headings"
-        
+
         #Add adjust_width_columns to dynamically adjust column width to data
         self.adjust_width_columns(df)
 
-        #Add to Treeview
-        for _, row in df.iterrows():
+        #Insert data to Treeview
+        for _, row in self.df.iterrows():
             self.tree.insert("", "end", values=list(row))
 
     #Clear tree data
@@ -74,6 +82,13 @@ class FakerDataFrame:
             max_length = max([len(str(value)) for value in df[length]] + [len(length)])
             self.tree.column(length, width=max_length*10) #scale width by 10 factor
             self.tree.heading(length, text=length)
+
+    #Sort names alphabetically method
+    def name_sort(self):
+        #Replace the name column in df with sorted values
+        self.df = self.df.sort_values(by=['Name'])
+        #Call display data to print out the df values to Tkinter GUI
+        self.display_data(self.df)  
 
 if __name__ == "__main__":
     #Run loop for GUI to get input and create dataframe
