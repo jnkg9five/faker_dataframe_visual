@@ -31,9 +31,17 @@ class FakerDataFrame:
         self.make_button = tk.Button(self.master, text="Generate Faker Data", command=self.faker_gen_data)
         self.make_button.pack(pady=10)
 
-        #Sort Button
-        self.sorting_button = tk.Button(self.master, text="Sort Name", command=self.name_sort)
-        self.sorting_button.pack(pady=10)
+        #Name sort Button
+        self.name_sort_button = tk.Button(self.master, text="Sort Name", command=self.name_sort)
+        self.name_sort_button.pack(pady=10)
+
+        #Phone sort Button
+        self.phone_sort_button = tk.Button(self.master, text="Sort Phone", command=self.phone_sort)
+        self.phone_sort_button.pack(pady=10)
+
+        #Job sort Button
+        self.job_sort_button = tk.Button(self.master, text="Sort Job", command=self.job_sort)
+        self.job_sort_button.pack(pady=10)
 
         #Insert data into the Treeview
         self.tree = ttk.Treeview(self.master)
@@ -89,6 +97,20 @@ class FakerDataFrame:
         self.df = self.df.sort_values(by=['Name'])
         #Call display data to print out the df values to Tkinter GUI
         self.display_data(self.df)  
+
+    #Sort phone number numerically method
+    def phone_sort(self):
+        #Replace the phone number column in df with sorted values
+        self.df = self.df.sort_values(by=['Phone'])
+        #Call display data to print out the df values to Tkinter GUI
+        self.display_data(self.df)
+    
+    #Sort job occupation alphabetically method
+    def job_sort(self):
+        #Replace the job description column in df with sorted values
+        self.df = self.df.sort_values(by=["Job"])
+        #Call display data to print ou the df values to Tkinter GUI
+        self.display_data(self.df)
 
 if __name__ == "__main__":
     #Run loop for GUI to get input and create dataframe

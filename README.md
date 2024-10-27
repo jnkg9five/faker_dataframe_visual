@@ -9,7 +9,7 @@ This is a Python program written to create a GUI interface using Tkinter to gene
 - Will generate datasets with random Name, Email, Address, Phone, and Job/Occupation 
 - Dynamic column scaling in visual data frame
 - Address field is now single line format by default
-- Button added to sort names alphabetically by first names
+- Button added to sort names alphabetically, phone number numerically, and job description alphabetically
 
 ## Prerequisites
 - Python 3.x
